@@ -1,0 +1,61 @@
+version: "3"
+services:
+  # cloudera:
+  #   container_name: cloudera
+  #   image: cloudera/quickstart:latest
+  #   tty: true
+  #   command: /usr/bin/docker-quickstart
+  #   ports:
+  #     - "8020:8020"   # Apache Hadoop HDFS NameNode
+  #     - "8022:22"     # ssh
+  #     - "7180:7180"   # Cloudera Manager
+  #     - "8888:8888"   # HUE
+  #     # - "11000:11000" # Oozie
+  #     - "50070:50070" # HDFS REST Namenode
+  #     - "2181:2181"   # Apache ZooKeeper
+  #     # - "11443:11443" # Apache Oozie
+  #     - "9090:9090"   # Apache HBase Thrift Server
+  #     - "8088:8088"   # Apache Hadoop YARN ResourceManager
+  #     - "19888:19888" # Apache Hadoop YARN JobHistory Server
+  #     # - "9092:9092"   # Apache Kafka Broker
+  #     # - "8983:8983"   # Apache Solr
+  #     - "16000:16000" # Apache HBase Master
+  #     - "16001:16001" # Apache Hadoop KMS
+  #     - "42222:22"    
+  #     - "8042:8042"   # Apache Hadoop YARN NodeManager
+  #     - "60010:60010" 
+  #     - "8080:8080"   # Apache HBase REST
+  #     - "7077:7077"   # Apache Spark
+  #   privileged: true
+  #   hostname: quickstart.cloudera
+  hbase:
+    container_name: hbase
+    image: harisekhon/hbase:1.2
+    ports:
+      - "2181:2181"   # zookeeper
+      - "16010:16010" # Hbase Web UI
+      - "9090:9090"   # Hbase Thrift
+      - "9095:9095"   # Hbase REST
+    networks:
+      - hbase-network
+  minio:
+    container_name: minio_s3
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_storage:/data
+    environment:
+      MINIO_ROOT_USER: minio_ak_admin
+      MINIO_ROOT_PASSWORD: minio_ak_admin
+    command: server --console-address ":9001" /data
+
+networks:
+  hbase-network:
+    driver: bridge
+
+volumes:
+  minio_storage: {}
+
+
